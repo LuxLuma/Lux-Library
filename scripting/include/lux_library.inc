@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.0"
+#define LUX_LIBRARY_VERSION "0.5.1"
 
 #define GIMMEDATA "lux_library"
 
@@ -72,6 +72,7 @@ stock OS_Type GetOSType(Handle &hGamedata=null)
 
 /**
  * An alternative to TeleportEntity that maintains lerped movement client-side when setting an entity's new origin.
+ * Note: Does not account for parented entities, uses world space.
  *
  * @param iEntity 		Entity index to set new origin of.
  * @param vec			New origin of the entity.
@@ -355,7 +356,7 @@ stock float Terror_GetAdrenalineTime(int iClient)
 }
 
 /**
- * Create a physics explosion that affects players without checking for line of sight and applying force fall-off.
+ * Create a physics explosion that does not affect players and don't check for line of sight and no force fall-off.
  *
  * @param vecOrigin		Origin of the explosion.
  * @param iMagnitude		Magnitude of the explosion.
@@ -420,7 +421,7 @@ stock void TE_SetupExplodeForce(float vecOrigin[3], float flRadius, float flMagn
 	{
 		iEffectIndex = __FindStringIndex2(FindStringTable("EffectDispatch"), "ExplosionForce");
 		if(iEffectIndex == INVALID_STRING_INDEX)
-			SetFailState("Unable to find EffectDispatch/ExplosionForce indexes");
+			SetFailState("Unable to find EffectDispatch/ExplosionForce index");
 		
 	}
 	
@@ -673,7 +674,7 @@ stock void TE_SetupParticleFollowEntity(int iParticleIndex, int iEntIndex, float
  **/
 stock void TE_SetupParticleFollowEntity_MaintainOffset(int iParticleIndex, int iEntIndex, float vecParticleStartPos[3], float vecParticleAngles[3]={0.0, 0.0, 0.0})
 {
-	float vecDummy[3]={0.0, 0.0, 0.0};
+	static float vecDummy[3]={0.0, 0.0, 0.0};
 	
 	TE_Start("EffectDispatch");
 	
@@ -898,6 +899,7 @@ stock void TE_SetupTracerSound(float vecParticleStartPos[3], float vecParticleEn
 }
 
 /**
+ * Credit: Dysphie for decal example
  * Note to apply to static props pass 0(world) to iTarget and iHitbox is used for static prop index TR_GetHitBoxIndex() to trace it.
  *
  * @param vecOrigin 		Origin of the decal in world space.
@@ -917,6 +919,7 @@ stock void TE_SetupEntityDecal(float vecOrigin[3], float vecStart[3], int iTarge
 }
 
 /**
+ * Credit: Dysphie for decal example
  * Sets up a world decal.
  *
  * @param vecOrigin 		Origin of the decal in world space.
@@ -925,9 +928,88 @@ stock void TE_SetupEntityDecal(float vecOrigin[3], float vecStart[3], int iTarge
 stock void TE_SetupWorldDecal(float vecOrigin[3], int iPrecacheDecal)
 {
 	TE_Start("World Decal");
-	TE_WriteVector("m_vecOrigin", vecPosEnd);
+	TE_WriteVector("m_vecOrigin", vecOrigin);
 	TE_WriteNum("m_nIndex", iPrecacheDecal);
 }
+
+/**
+ * Sets up a decal from a traceray.
+ *
+ * @param TR 				Pass traceray handle or INVALID_HANDLE to use global trace result.
+ * @param sDecalName		Name of the decal.
+ *
+ * @return				true if decal was setup false otherwise.
+ * @error				Invaid Handle.
+ **/
+stock bool TE_SetupDecal_FromTrace(Handle hTR=INVALID_HANDLE, char[] sDecalName)
+{
+	if(!TR_DidHit(hTR))
+		return false;
+	
+	int iPrecacheDecal = GetDecalIndex(sDecalName);
+	if(iPrecacheDecal == INVALID_STRING_TABLE)
+		return false;
+	
+	float vecStart[3];
+	float vecEnd[3];
+	int iTarget = TR_GetEntityIndex(hTR);
+	int iHitbox = TR_GetHitBoxIndex(hTR);
+	TR_GetStartPosition(hTR, vecStart);
+	TR_GetEndPosition(vecEnd, hTR);
+	
+	if(iTarget == 0)
+	{
+		if(iHitbox)
+		{
+			TE_SetupEntityDecal(vecEnd, vecStart, iTarget, iHitbox, iPrecacheDecal);
+		}
+		else
+		{
+			TE_SetupWorldDecal(vecEnd, iPrecacheDecal);
+		}
+	}
+	else
+	{
+		TE_SetupEntityDecal(vecEnd, vecStart, iTarget, iHitbox, iPrecacheDecal);
+	}
+	return true;
+}
+
+/**
+ * Gets a Decal index or late precaches it.
+ * Note: Cache decal in OnMapStart() with PrecacheDecal to avoid them spewing errors.
+ *
+ * @param sDecalName		Name of the particle system.
+ *
+ * @return			The decal index or INVALID_STRING_INDEX on error.
+ * @error			Invalid decal stringtable index.
+ **/
+stock int GetDecalIndex(char[] sDecalName)
+{
+	int iDecalIndex;
+	if(!IsDecalPrecached(sDecalName))
+	{
+		iDecalIndex = PrecacheDecal(sDecalName);
+		
+#if !defined DISABLE_PRINT_PRECACHE_ERRORS
+		if(iDecalIndex == INVALID_STRING_INDEX)
+		{
+			LogError("Unable to late precache of decal '%s'", sDecalName);
+		}
+		else
+		{
+			LogError("Late precache of decal '%s'", sDecalName);
+		}
+#endif
+
+	}
+	else
+	{
+		iDecalIndex = PrecacheDecal(sDecalName);
+	}
+	return iDecalIndex;
+}
+
 
 /**
  * Gets a particle system index or late precaches it.
@@ -953,7 +1035,7 @@ stock int GetParticleIndex(char[] sParticleName)
 	{
 		iParticleStringIndex = __PrecacheParticleSystem(sParticleName);
 		
-#if !defined GET_PARTICLE_INDEX_DISABLE_PRINT_PRECACHE_ERRORS
+#if !defined DISABLE_PRINT_PRECACHE_ERRORS
 		if(iParticleStringIndex == INVALID_STRING_INDEX)
 		{
 			LogError("Unable to late precache of particle '%s'", sParticleName);
