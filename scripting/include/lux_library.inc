@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.1"
+#define LUX_LIBRARY_VERSION "0.5.2"
 
 #define GIMMEDATA "lux_library"
 
@@ -48,6 +48,7 @@ static stock void GetGameData(Handle &hGamedata)
 
 /**
  * Returns the OS of the server.
+ * Note: Pass null to use gamedata from lux_library
  *
  * @param hGamedata		Handle to the gamedata file to get the OS type from.
  *
@@ -211,7 +212,7 @@ stock bool GetAttachmentVectors(int iEntity, char[] attachmentName, float vecOri
  * @param iEntity		Entity index of the attachment.
  * @param attachmentName	Name of the attachment.
  *
- * @return			Attachment index.
+ * @return			Attachment index, 0 for not found.
  * @error			Invalid entity index, invalid attachment name,
  *					signature for function not found, or SDKCall failed.
  **/
@@ -441,7 +442,7 @@ stock void TE_SetupExplodeForce(float vecOrigin[3], float flRadius, float flMagn
  * @param iPrecacheModel	Stringtable index of the prop.
  * @param vecModelAngles	Angles of the prop.
  * @param vecVelocity		Velocity used by explosion for pushing the prop.
- * @param iFlags		Flags to apply to the prop. Note: A value of "1" applies auto-despawn, which is automatically applied to unsupported models.
+ * @param iFlags		Flags to apply to the prop. Note: A value of "1" applies auto-despawn, unsupported models will despawn next client tick.
  * @param iEffects		Effects to apply to the prop.
  * @param iSkin			Skin of the prop's model.
  * @param RGB			Color of the prop's model.
@@ -935,7 +936,7 @@ stock void TE_SetupWorldDecal(float vecOrigin[3], int iPrecacheDecal)
 /**
  * Sets up a decal from a traceray.
  *
- * @param TR 				Pass traceray handle or INVALID_HANDLE to use global trace result.
+ * @param hTR 				Pass traceray handle or INVALID_HANDLE to use global trace result.
  * @param sDecalName		Name of the decal.
  *
  * @return				true if decal was setup false otherwise.
