@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.2"
+#define LUX_LIBRARY_VERSION "0.5.3"
 
 #define GIMMEDATA "lux_library"
 
@@ -676,6 +676,9 @@ stock void TE_SetupParticleFollowEntity(int iParticleIndex, int iEntIndex, float
 stock void TE_SetupParticleFollowEntity_MaintainOffset(int iParticleIndex, int iEntIndex, float vecParticleStartPos[3], float vecParticleAngles[3]={0.0, 0.0, 0.0})
 {
 	static float vecDummy[3]={0.0, 0.0, 0.0};
+	static EngineVersion IsEngine;
+	if(IsEngine == Engine_Unknown)
+		IsEngine = GetEngineVersion();
 	
 	TE_Start("EffectDispatch");
 	
@@ -707,6 +710,54 @@ stock void TE_SetupParticleFollowEntity_MaintainOffset(int iParticleIndex, int i
 	TE_WriteFloat("m_flRadius", 0.0);
 	
 	TE_WriteNum("m_nDamageType", 3);
+}
+
+/**
+ * Set up particle that attaches to points on a model that is predefined in particle i think.
+ *
+ * @param iParticleIndex 	Particle index.
+ * @param iEntIndex		Entity index to attach.
+ * @param vecParticleStartPos	Starting point valve uses it
+ *
+ * @error			Invalid effect index.
+ **/
+stock void TE_SetupParticle_ControlPoints(int iParticleIndex, int iEntIndex, float vecParticleStartPos[3])
+{
+	static float vecDummy[3]={0.0, 0.0, 0.0};
+	static EngineVersion IsEngine;
+	if(IsEngine == Engine_Unknown)
+		IsEngine = GetEngineVersion();
+	
+	TE_Start("EffectDispatch");
+	
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.x"	:"m_vOrigin[0]", vecParticleStartPos[0]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.y"	:"m_vOrigin[1]", vecParticleStartPos[1]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vOrigin.z"	:"m_vOrigin[2]", vecParticleStartPos[2]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.x"	:"m_vStart[0]", vecDummy[0]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.y"	:"m_vStart[1]", vecDummy[1]);
+	TE_WriteFloat(IsEngine == Engine_Left4Dead2 ? "m_vStart.z"	:"m_vStart[2]", vecDummy[2]);
+
+	static int iEffectIndex = INVALID_STRING_INDEX;
+	if(iEffectIndex < 0)
+	{
+		iEffectIndex = __FindStringIndex2(FindStringTable("EffectDispatch"), "ParticleEffect");
+		if(iEffectIndex == INVALID_STRING_INDEX)
+			SetFailState("Unable to find EffectDispatch/ParticleEffect indexes");
+	}
+
+	TE_WriteNum("m_iEffectName", iEffectIndex);
+	TE_WriteNum("m_nHitBox", iParticleIndex);
+	TE_WriteNum("entindex", iEntIndex);
+	TE_WriteNum("m_nAttachmentIndex", 255);
+	TE_WriteNum("m_fFlags", 1);
+
+
+	TE_WriteVector("m_vAngles", vecDummy);
+	TE_WriteFloat("m_flMagnitude", 0.0);
+	TE_WriteFloat("m_flScale", 1.0);
+	TE_WriteFloat("m_flRadius", 0.0);
+	
+	TE_WriteNum("m_nDamageType", 0);
 }
 
 /**
