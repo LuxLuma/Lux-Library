@@ -998,6 +998,12 @@ stock bool TE_SetupDecal_FromTrace(Handle hTR=INVALID_HANDLE, char[] sDecalName)
 	if(!TR_DidHit(hTR))
 		return false;
 	
+	int iSurf = TR_GetSurfaceFlags();
+	if((iSurf & SURF_NODECALS) || (iSurf & SURF_NODRAW) || (iSurf & SURF_SKY))
+	{
+		return false;
+	}
+	
 	int iPrecacheDecal = GetDecalIndex(sDecalName);
 	if(iPrecacheDecal == INVALID_STRING_TABLE)
 		return false;
