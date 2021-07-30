@@ -307,6 +307,31 @@ stock bool IsPositionInWater(float vecOrigin[3])
 }
 
 /**
+ * Sets dsp effect post audio FX.
+ *
+ * @param iClient			Client index of the player.
+ * @param flDelay			Delay before sending effect.
+ * @param dspEffectType		Dsp effect type see "scripts/dsp_presets.txt"
+ *
+ * @error			Invalid client index.
+ **/
+stock void Terror_SetPendingDspEffect(int iClient, float flDelay, int dspEffectType)
+{
+	// Get CountdownTimer address
+	static int timerAddress = -1;
+	if(timerAddress == -1)
+	{
+		timerAddress = FindSendPropInfo("CTerrorPlayer", "m_iBloodyHandsLevel") + 8;
+	}
+	
+	//timerAddress + 4 = Duration
+	//timerAddress + 8 = TimeStamp
+	SetEntDataFloat(iClient, timerAddress + 4, flDelay);
+	SetEntDataFloat(iClient, timerAddress + 8, GetGameTime() + flDelay);
+	SetEntData(iClient, timerAddress + 12, dspEffectType);
+}
+
+/**
  * Sets the adrenaline effect duration of a survivor.
  *
  * @param iClient		Client index of the survivor.
