@@ -397,7 +397,7 @@ stock void PhysicsExplode(float vecOrigin[3], int iMagnitude, float flRadius, bo
 	
 	if(iBoom == INVALID_ENT_REFERENCE || !IsValidEntity(iBoom))
 	{
-		iBoom = EntIndexToEntRef(Entity_Create("env_physexplosion"));
+		iBoom = EntIndexToEntRef(CreateEntityByName("env_physexplosion"));
 		if(iBoom == INVALID_ENT_REFERENCE)
 			return;
 	
@@ -433,6 +433,7 @@ stock void PhysicsExplode(float vecOrigin[3], int iMagnitude, float flRadius, bo
 /**
  * Sets up an invisible explosion to push client-side physics.
  * Note: The grenade launcher uses this to push bodies and other objects.
+ * Note: Left 4 Dead 2 only.
  *
  * @param vecOrigin		Origin of the explosion in world space.
  * @param flRadius		Radius of the explosion.
