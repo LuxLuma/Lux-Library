@@ -1024,7 +1024,7 @@ stock bool TE_SetupDecal_FromTrace(Handle hTR=INVALID_HANDLE, char[] sDecalName)
 	if(!TR_DidHit(hTR))
 		return false;
 	
-	int iSurf = TR_GetSurfaceFlags();
+	int iSurf = TR_GetSurfaceFlags(hTR);
 	if((iSurf & SURF_NODECALS) || (iSurf & SURF_NODRAW) || (iSurf & SURF_SKY))
 	{
 		return false;
