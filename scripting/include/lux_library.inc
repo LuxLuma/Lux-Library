@@ -702,9 +702,9 @@ stock void TE_SetupParticleFollowEntity(int iParticleIndex, int iEntIndex, float
 stock void TE_SetupParticleFollowEntity_MaintainOffset(int iParticleIndex, int iEntIndex, float vecParticleStartPos[3], float vecParticleAngles[3]={0.0, 0.0, 0.0})
 {
 	static float vecDummy[3]={0.0, 0.0, 0.0};
-	//static EngineVersion IsEngine;
-	//if(IsEngine == Engine_Unknown)
-	//	IsEngine = GetEngineVersion();
+	static EngineVersion IsEngine;
+	if(IsEngine == Engine_Unknown)
+		IsEngine = GetEngineVersion();
 	
 	TE_Start("EffectDispatch");
 	
