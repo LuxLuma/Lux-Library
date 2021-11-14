@@ -597,10 +597,11 @@ stock void TE_SetupParticleAttachment(int iParticleIndex, int iAttachmentIndex, 
  * @param vecParticleStartPos	Starting point of the particle in world space.
  * @param vecParticleEndPos	Ending point of the particle in world space.
  * @param vecParticleAngles	Angles of the particle.
+ * @param iEntity	Entity owner if entity dies so does particle.
  *
  * @error			Invalid effect index.
  **/
-stock void TE_SetupParticle(int iParticleIndex, float vecParticleStartPos[3], float vecParticleEndPos[3]={0.0, 0.0, 0.0}, float vecParticleAngles[3]={0.0, 0.0, 0.0})
+stock void TE_SetupParticle(int iParticleIndex, float vecParticleStartPos[3], float vecParticleEndPos[3]={0.0, 0.0, 0.0}, float vecParticleAngles[3]={0.0, 0.0, 0.0}, int iEntity=0)
 {
 	static EngineVersion IsEngine;
 	if(IsEngine == Engine_Unknown)
@@ -627,7 +628,7 @@ stock void TE_SetupParticle(int iParticleIndex, float vecParticleStartPos[3], fl
 	TE_WriteNum("m_iEffectName", iEffectIndex);
 	TE_WriteNum("m_nHitBox", iParticleIndex);
 
-	TE_WriteNum("entindex", 0);
+	TE_WriteNum("entindex", iEntity);
 	TE_WriteNum("m_nAttachmentIndex", 0);
 	TE_WriteNum("m_fFlags", 0);
 	
@@ -840,18 +841,19 @@ stock bool TE_SetupParticleFollowEntity_MaintainOffset_Name(char[] sParticleName
  * @param vecParticleStartPos	Starting point of the particle in world space.
  * @param vecParticleEndPos	Ending point of the particle in world space.
  * @param vecParticleAngles	Angles of the particle.
+ * @param iEntity	Entity owner if entity dies so does particle.
  *
  * @return			True on success, false on failure.
  * @error			Invalid effect index.
  **/
-stock bool TE_SetupParticle_Name(char[] sParticleName, float vecParticleStartPos[3], float vecParticleEndPos[3]={0.0, 0.0, 0.0}, float vecParticleAngles[3]={0.0, 0.0, 0.0})
+stock bool TE_SetupParticle_Name(char[] sParticleName, float vecParticleStartPos[3], float vecParticleEndPos[3]={0.0, 0.0, 0.0}, float vecParticleAngles[3]={0.0, 0.0, 0.0}, int iEntity=0)
 {
 	int iParticleStringIndex = GetParticleIndex(sParticleName);
 	if(iParticleStringIndex == INVALID_STRING_INDEX)
 	{
 		return false;
 	}
-	TE_SetupParticle(iParticleStringIndex, vecParticleStartPos, vecParticleEndPos, vecParticleAngles);
+	TE_SetupParticle(iParticleStringIndex, vecParticleStartPos, vecParticleEndPos, vecParticleAngles, iEntity);
 	return true;
 }
 
