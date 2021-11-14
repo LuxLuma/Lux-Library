@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.3"
+#define LUX_LIBRARY_VERSION "0.5.4"
 
 #define GIMMEDATA "lux_library"
 
@@ -462,7 +462,7 @@ stock void TE_SetupExplodeForce(float vecOrigin[3], float flRadius, float flMagn
 }
 
 /**
- * Creates a physics prop.
+ * Creates a clientside physics prop.
  *
  * @param vecOrigin		Origin of the prop in world space.
  * @param iPrecacheModel	Stringtable index of the prop.
@@ -473,7 +473,7 @@ stock void TE_SetupExplodeForce(float vecOrigin[3], float flRadius, float flMagn
  * @param iSkin			Skin of the prop's model.
  * @param RGB			Color of the prop's model.
  **/
-stock void TE_Create_PhysicsProp(float vecModelOrigin[3], 
+stock void TE_SetupPhysicsProp(float vecModelOrigin[3], 
 								int iPrecacheModel, 
 								float vecModelAngles[3]={0.0, ...}, 
 								float vecVelocity[3]={0.0, ...}, 
@@ -702,9 +702,9 @@ stock void TE_SetupParticleFollowEntity(int iParticleIndex, int iEntIndex, float
 stock void TE_SetupParticleFollowEntity_MaintainOffset(int iParticleIndex, int iEntIndex, float vecParticleStartPos[3], float vecParticleAngles[3]={0.0, 0.0, 0.0})
 {
 	static float vecDummy[3]={0.0, 0.0, 0.0};
-	static EngineVersion IsEngine;
-	if(IsEngine == Engine_Unknown)
-		IsEngine = GetEngineVersion();
+	//static EngineVersion IsEngine;
+	//if(IsEngine == Engine_Unknown)
+	//	IsEngine = GetEngineVersion();
 	
 	TE_Start("EffectDispatch");
 	
@@ -888,7 +888,7 @@ stock bool TE_SetupParticleAttachment_Names(char[] sParticleName, char[] sAttach
  *
  * @error			Invalid effect index.
  **/
-stock bool TE_SetupStopAllParticles(int iEntIndex)
+stock void TE_SetupStopAllParticles(int iEntIndex)
 {
 	static float vecDummy[3]={0.0, 0.0, 0.0};
 	static EngineVersion IsEngine;
