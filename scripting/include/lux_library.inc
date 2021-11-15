@@ -307,7 +307,7 @@ stock bool IsPositionInWater(float vecOrigin[3])
 }
 
 /**
- * Sets dsp effect post audio FX.
+ * Sets DSP effect post audio FX.
  *
  * @param iClient			Client index of the player.
  * @param flDelay			Delay before sending effect.
