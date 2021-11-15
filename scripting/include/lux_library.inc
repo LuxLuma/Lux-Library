@@ -317,26 +317,27 @@ stock bool IsPositionInWater(float vecOrigin[3])
  **/
 stock void Terror_SetPendingDspEffect(int iClient, float flDelay, int dspEffectType)
 {
-    static EngineVersion IsEngine;
-    if(IsEngine == Engine_Unknown)
-        IsEngine = GetEngineVersion();
-
-    // Get CountdownTimer address
-    static int timerAddress = -1;
-    if(timerAddress == -1)
-    {
-        if(IsEngine == Engine_Left4Dead2)
-            timerAddress = FindSendPropInfo("CTerrorPlayer", "m_iBloodyHandsLevel") + 8;
-        else
-            timerAddress = FindSendPropInfo("CTerrorPlayer", "m_bloodyHandsPercent") + 4;
-    }
-    
-    //timerAddress + 4 = Duration
-    //timerAddress + 8 = TimeStamp
-    SetEntDataFloat(iClient, timerAddress + 4, flDelay);
-    SetEntDataFloat(iClient, timerAddress + 8, GetGameTime() + flDelay);
-    SetEntData(iClient, timerAddress + 12, dspEffectType);
+	static EngineVersion IsEngine;
+	if(IsEngine == Engine_Unknown)
+	IsEngine = GetEngineVersion();
+	
+	// Get CountdownTimer address
+	static int timerAddress = -1;
+	if(timerAddress == -1)
+	{
+		if(IsEngine == Engine_Left4Dead2)
+		timerAddress = FindSendPropInfo("CTerrorPlayer", "m_iBloodyHandsLevel") + 8;
+		else
+		timerAddress = FindSendPropInfo("CTerrorPlayer", "m_bloodyHandsPercent") + 4;
+	}
+	
+	//timerAddress + 4 = Duration
+	//timerAddress + 8 = TimeStamp
+	SetEntDataFloat(iClient, timerAddress + 4, flDelay);
+	SetEntDataFloat(iClient, timerAddress + 8, GetGameTime() + flDelay);
+	SetEntData(iClient, timerAddress + 12, dspEffectType);
 }
+
 /**
  * Sets the adrenaline effect duration of a survivor.
  *
