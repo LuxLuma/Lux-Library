@@ -516,15 +516,8 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
  *
  * @return			True on success, false on failure.
  **/
-stock bool TE_SetupDynamicLight(float vecOrigin[3], int RGB[3], float flRadius, float flTime, float flDecay=0.0, int exponent=0)
+stock void TE_SetupDynamicLight(float vecOrigin[3], int RGB[3], float flRadius, float flTime, float flDecay=0.0, int exponent=0)
 {
-	static int iLastTick;
-	int iCurrentTick = GetGameTickCount();
-	
-	if(iLastTick == iCurrentTick)
-		return false;
-	iLastTick = iCurrentTick;
-	
 	TE_Start("Dynamic Light");
 	
 	TE_WriteVector("m_vecOrigin", vecOrigin);
@@ -535,8 +528,6 @@ stock bool TE_SetupDynamicLight(float vecOrigin[3], int RGB[3], float flRadius, 
 	TE_WriteFloat("m_fRadius", flRadius);
 	TE_WriteFloat("m_fTime", flTime);
 	TE_WriteFloat("m_fDecay", flDecay);
-	
-	return true;
 }
 
 /**
