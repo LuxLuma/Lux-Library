@@ -396,7 +396,7 @@ stock float Terror_GetAdrenalineTime(int iClient)
  * @param iDeathModel		Death model index, dead survivor model (survivor_death_model).
  *
  * @return			True if revive was successful false otherwise.
- * @error			Invalid entity index or invalid attachment name,
+ * @error			Invalid entity indexs,
  *					signature for function not found, or SDKCall failed.
  **/
 stock bool Terror_ReviveDeathModel(int iRevivee, int iReviver, int iDeathModel)
