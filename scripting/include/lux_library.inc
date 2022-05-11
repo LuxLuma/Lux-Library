@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.5"
+#define LUX_LIBRARY_VERSION "0.5.6"
 
 #define GIMMEDATA "lux_library"
 
@@ -386,6 +386,46 @@ stock float Terror_GetAdrenalineTime(int iClient)
 		return -1.0;
 	
 	return flTime - flGameTime;
+}
+
+/**
+ * Calls CTerrorPlayer::OnRevivedByDefibrillator()
+ *
+ * @param iRevivee 		Client index be revived.
+ * @param iReviver		Client index who revived can be same as revivee.
+ * @param iDeathModel		Death model index, dead survivor model (survivor_death_model).
+ *
+ * @return			True if revive was successful false otherwise.
+ * @error			Invalid entity index or invalid attachment name,
+ *					signature for function not found, or SDKCall failed.
+ **/
+stock bool Terror_ReviveDeathModel(int iRevivee, int iReviver, int iDeathModel)
+{
+	static Handle hSDKCall;
+	if(hSDKCall == null)
+	{
+		Handle hGamedata;
+		GetGameData(hGamedata);
+		
+		StartPrepSDKCall(SDKCall_Player);
+		if(PrepSDKCall_SetFromConf(hGamedata, SDKConf_Signature, "CTerrorPlayer::OnRevivedByDefibrillator"))
+		{
+			PrepSDKCall_AddParameter(SDKType_CBasePlayer, SDKPass_Pointer);
+			PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
+			hSDKCall = EndPrepSDKCall();
+			if(hSDKCall == null)
+				LogError("Unable to prep 'CTerrorPlayer::OnRevivedByDefibrillator'");
+		}
+		else
+		{
+			LogError("Error finding the 'CTerrorPlayer::OnRevivedByDefibrillator' signature.");
+		}
+		delete hGamedata;
+		if(hSDKCall == null)
+			return false;
+	}
+	SDKCall(hSDKCall, iRevivee, iReviver, iDeathModel);
+	return true;
 }
 
 /**
