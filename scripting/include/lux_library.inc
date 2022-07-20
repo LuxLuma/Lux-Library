@@ -1418,7 +1418,7 @@ stock bool L4D_TE_Stop_Particle(float fParticleStartPos[3]={0.0, 0.0, 0.0},
 	static int iEffectIndex = INVALID_STRING_INDEX;
 	if(iEffectIndex < 0)
 	{
-		iEffectIndex = FindStringIndex2(FindStringTable("EffectDispatch"), "ParticleEffectStop");
+		iEffectIndex = __FindStringIndex2(FindStringTable("EffectDispatch"), "ParticleEffectStop");
 		if(iEffectIndex == INVALID_STRING_INDEX)
 			SetFailState("Unable to find EffectDispatch/ParticleEffectStop indexes");
 
