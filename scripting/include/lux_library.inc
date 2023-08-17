@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.7"
+#define LUX_LIBRARY_VERSION "0.5.8"
 
 #define GIMMEDATA "lux_library"
 
@@ -1426,10 +1426,10 @@ stock void EmitMixedAmbientSound(int client, const char[] sample,
 	
 	if(flDistMulti > 1.0)
 	{
-		newPitch = FloatToInt(newPitch / (flDistMulti > 2.0 ? 2.0 : flDistMulti));
+		newPitch = RoundToNearest(newPitch / (flDistMulti > 2.0 ? 2.0 : flDistMulti));
 	}
 	
-	DistLevelBoost = FloatToInt((flDistPercent * exponent) * levelBoost);
+	DistLevelBoost = RoundToNearest((flDistPercent * exponent) * levelBoost);
 	if(DistLevelBoost > levelBoost)
 		DistLevelBoost = levelBoost;
 	
@@ -1510,10 +1510,10 @@ stock void EmitMixedAmbientSound_FallBack(int client, const char[] sample,
 	newPitch = pitch;
 	if(flDistMulti > 1.0)
 	{
-		newPitch = FloatToInt(newPitch / (flDistMulti > 2.0 ? 2.0 : flDistMulti));
+		newPitch = RoundToNearest(newPitch / (flDistMulti > 2.0 ? 2.0 : flDistMulti));
 	}
 	
-	DistLevelBoost = FloatToInt((flDistPercent * exponent) * levelBoost);
+	DistLevelBoost = RoundToNearest((flDistPercent * exponent) * levelBoost);
 	if(DistLevelBoost > levelBoost)
 		DistLevelBoost = levelBoost;
 	
