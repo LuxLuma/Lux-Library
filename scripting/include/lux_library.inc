@@ -1520,6 +1520,26 @@ stock void EmitMixedAmbientSound_FallBack(int client, const char[] sample,
 	EmitSoundToClient(client, sample, entity, sndChannel, level + DistLevelBoost, _, _, newPitch, _, origin);
 }
 
+stock ShakeClientScreenAll(float origin[3], float shakeRange, float shakeAmplitude=5.0, float shakeFrequency=40.0, float shakeDuration=1.0)
+{
+	for(int i = 1; i <= MaxClients; ++i)
+	{
+		if(!IsClientInGame(i) || IsFakeClient(i))
+		{
+			ShakeClientScreen(i, origin, shakeRange, shakeAmplitude, shakeFrequency, shakeDuration);
+		}
+	}
+}
+
+stock void ShakeClientScreen(int client, float origin[3], float shakeRange, float shakeAmplitude=5.0, float shakeFrequency=40.0, float shakeDuration=1.0)
+{
+	float vecEyePos[3];
+	GetClientEyePosition(client, vecEyePos);
+	float flDist = GetVectorDistance(vecEyePos, origin);
+	float flDistPercent = (flDist / shakeRange);
+	Client_Shake(client, _, ((shakeAmplitude / (flDistPercent <= 0 ? 0.001 : flDistPercent))), shakeFrequency, shakeDuration);
+}
+
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////Legacy Particle Stock///////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
