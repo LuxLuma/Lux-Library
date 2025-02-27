@@ -1525,9 +1525,9 @@ stock ShakeClientScreenAll(float origin[3], float shakeRange, float shakeAmplitu
 	for(int i = 1; i <= MaxClients; ++i)
 	{
 		if(!IsClientInGame(i) || IsFakeClient(i))
-		{
-			ShakeClientScreen(i, origin, shakeRange, shakeAmplitude, shakeFrequency, shakeDuration);
-		}
+			continue;
+		
+		ShakeClientScreen(i, origin, shakeRange, shakeAmplitude, shakeFrequency, shakeDuration);
 	}
 }
 
