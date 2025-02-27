@@ -1537,7 +1537,10 @@ stock void ShakeClientScreen(int client, float origin[3], float shakeRange, floa
 	GetClientEyePosition(client, vecEyePos);
 	float flDist = GetVectorDistance(vecEyePos, origin);
 	float flDistPercent = (flDist / shakeRange);
-	Client_Shake(client, _, ((shakeAmplitude / (flDistPercent <= 0 ? 0.001 : flDistPercent))), shakeFrequency, shakeDuration);
+	if(flDistPercent <= 0.001)
+		return;
+	
+	Client_Shake(client, _, (shakeAmplitude / flDistPercent), shakeFrequency, shakeDuration);
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
