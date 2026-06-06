@@ -23,7 +23,7 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define LUX_LIBRARY_VERSION "0.5.8"
+#define LUX_LIBRARY_VERSION "0.5.9"
 
 #define GIMMEDATA "lux_library"
 
@@ -545,6 +545,32 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
 	TE_WriteNum("r", RGB[0]);
 	TE_WriteNum("g", RGB[1]);
 	TE_WriteNum("b", RGB[2]);
+}
+
+/**
+ * Creates a cheap clientside physics prop using basic physics should work with anything.
+ *
+ * @param vecOrigin			Origin of the prop in world space.
+ * @param vecModelAngles	Angles of the prop.
+ * @param vecVelocity		Velocity used by explosion for pushing the prop.
+ * @param iPrecacheModel	Stringtable index of the prop.
+ * @param flRandomVel		Adds random velocity to model
+ * @param amountToSpawn		Amount of models to spawn recommend using flRandomVel if more than 1
+ * @param flDespawnTime		Time until despawn.
+ **/
+stock void TE_SetupBreakModel(float vecOrigin[3], float vecAngles[3]={0.0, 0.0, 0.0}, float vecVelocity[3]={0.0, 0.0, 0.0}, int iPrecacheModel, int iRandomVel, int iAmountToSpawn=1, float flDespawnTime=10.0)
+{
+	TE_Start("breakmodel");
+	TE_WriteVector("m_vecOrigin", vecOrigin);
+	TE_WriteFloat("m_angRotation[0]", vecAngles[0]);
+	TE_WriteFloat("m_angRotation[1]", vecAngles[1]);
+	TE_WriteFloat("m_angRotation[2]", vecAngles[2]);
+	TE_WriteVector("m_vecVelocity", vecVelocity);
+	TE_WriteNum("m_nModelIndex", iPrecacheModel);
+	TE_WriteNum("m_nRandomization", iRandomVel);
+	TE_WriteNum("m_nCount", iAmountToSpawn);
+	TE_WriteFloat("m_fTime", flDespawnTime);
+	TE_WriteNum("m_nFlags", 0); //forgot
 }
 
 /**
