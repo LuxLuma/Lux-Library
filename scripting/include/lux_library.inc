@@ -1,5 +1,5 @@
 /**
-* Copyright (C) 2026  LuxLuma
+* Copyright (C) 2026 LuxLuma
 *
 * This program is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -20,8 +20,14 @@
 #endif
 #define _lux_library_included
 
+#pragma newdecls required
+
 #include <sourcemod>
 #include <sdktools>
+
+#tryinclude <left4dhooks_anim>
+#tryinclude <left4dhooks_silver>
+#tryinclude <left4dhooks_stocks>
 
 #define LUX_LIBRARY_VERSION "0.5.9"
 
@@ -311,7 +317,7 @@ stock bool IsPositionInWater(float vecOrigin[3])
  *
  * @param iClient			Client index of the player.
  * @param flDelay			Delay before sending effect.
- * @param dspEffectType		Dsp effect type see "scripts/dsp_presets.txt"
+ * @param dspEffectType		DSP effect type see "scripts/dsp_presets.txt"
  *
  * @error			Invalid client index.
  **/
@@ -319,16 +325,16 @@ stock void Terror_SetPendingDspEffect(int iClient, float flDelay, int dspEffectT
 {
 	static EngineVersion IsEngine;
 	if(IsEngine == Engine_Unknown)
-	IsEngine = GetEngineVersion();
+		IsEngine = GetEngineVersion();
 	
 	// Get CountdownTimer address
 	static int timerAddress = -1;
 	if(timerAddress == -1)
 	{
 		if(IsEngine == Engine_Left4Dead2)
-		timerAddress = FindSendPropInfo("CTerrorPlayer", "m_iBloodyHandsLevel") + 8;
+			timerAddress = FindSendPropInfo("CTerrorPlayer", "m_iBloodyHandsLevel") + 8;
 		else
-		timerAddress = FindSendPropInfo("CTerrorPlayer", "m_bloodyHandsPercent") + 4;
+			timerAddress = FindSendPropInfo("CTerrorPlayer", "m_bloodyHandsPercent") + 4;
 	}
 	
 	//timerAddress + 4 = Duration
