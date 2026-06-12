@@ -547,6 +547,7 @@ stock void TE_SetupPhysicsProp(float vecModelOrigin[3],
 	TE_WriteVector("m_vecVelocity", vecVelocity);
 	TE_WriteNum("m_nModelIndex", iPrecacheModel);
 	TE_WriteNum("m_nFlags", iFlags);
+	TE_WriteNum("m_nSkin", iSkin);
 	TE_WriteNum("m_nEffects", iEffects);
 	TE_WriteNum("r", RGB[0]);
 	TE_WriteNum("g", RGB[1]);
