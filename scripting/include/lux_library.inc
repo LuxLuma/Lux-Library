@@ -25,9 +25,9 @@
 #include <sourcemod>
 #include <sdktools>
 
-#tryinclude <left4dhooks_anim>
-#tryinclude <left4dhooks_silver>
-#tryinclude <left4dhooks_stocks>
+//#tryinclude <left4dhooks_anim>
+//#tryinclude <left4dhooks_silver>
+//#tryinclude <left4dhooks_stocks>
 
 #define LUX_LIBRARY_VERSION 0.5.9
 
